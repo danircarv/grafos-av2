@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graph Distance Visualizer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.23.0/cytoscape.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --accent-color: #38bdf8;
+            --success: #10b981;
+            --error: #ef4444;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: radial-gradient(circle at top right, #1e293b, #0f172a);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+        }
+
+        /* Sidebar */
+        aside {
+            width: 300px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .sample-list {
+            flex: 1;
+            overflow-y: auto;
+            list-style: none;
+        }
+
+        .command-panel {
+            margin-top: 18px;
+            padding-top: 18px;
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            min-height: 0;
+        }
+
+        .command-panel h2 {
+            font-size: 0.95rem;
+            color: var(--text-primary);
+        }
+
+        .command-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            overflow-y: auto;
+        }
+
+        .command-item {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid transparent;
+            border-radius: 10px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .command-item strong {
+            font-size: 0.95rem;
+        }
+
+        .command-item p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .command-code {
+            font-size: 0.72rem;
+            background: rgba(15, 23, 42, 0.72);
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            border-radius: 8px;
+            padding: 10px;
+            white-space: pre-wrap;
+            word-break: break-word;
+            color: #dbeafe;
+        }
+
+        .command-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .command-button {
+            border: 0;
+            border-radius: 999px;
+            padding: 7px 12px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.15s ease, background 0.15s ease;
+        }
+
+        .command-button:hover {
+            transform: translateY(-1px);
+        }
+
+        .command-button.copy {
+            background: var(--accent-color);
+            color: #04111f;
+        }
+
+        .command-button.secondary {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-primary);
+        }
+
+        .command-status {
+            min-height: 1rem;
+            font-size: 0.72rem;
+            color: var(--success);
+        }
+
+        .sample-item {
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sample-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--glass-border);
+        }
+
+        .sample-item.active {
+            background: rgba(56, 189, 248, 0.1);
+            border-color: var(--accent-color);
+        }
+
+        .badge {
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .badge.success { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .badge.error { background: rgba(239, 68, 68, 0.2); color: var(--error); }
+
+        /* Main Content */
+        main {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto 1fr;
+            gap: 20px;
+        }
+
+        .header-panel {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stats {
+            display: flex;
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: var(--glass-bg);
+            padding: 15px 25px;
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .stat-label { font-size: 0.8rem; color: var(--text-secondary); }
+        .stat-value { font-size: 1.2rem; font-weight: 600; }
+
+        /* Visualization Area */
+        .viz-container {
+            background: var(--glass-bg);
+            border-radius: 16px;
+            border: 1px solid var(--glass-border);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            min-height: 400px;
+        }
+
+        .viz-header {
+            margin-bottom: 15px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #cy-main, .cy-proto {
+            flex: 1;
+            width: 100%;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .prototypes-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .proto-card {
+            background: var(--glass-bg);
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s;
+        }
+
+        .proto-card.winner {
+            border-color: var(--success);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.1);
+            transform: scale(1.02);
+        }
+
+        .proto-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .distance-val { color: var(--accent-color); font-weight: 600; }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); }
+    </style>
+</head>
+<body>
+    <aside>
+        <h1>GED Visualizer</h1>
+        <ul class="sample-list" id="sampleList"></ul>
+        <div class="command-panel">
+            <h2>Terminal commands</h2>
+            <ul class="command-list" id="commandList"></ul>
+            <div class="command-status" id="commandStatus"></div>
+        </div>
+    </aside>
+
+    <main>
+        <div class="header-panel">
+            <div id="sampleInfo">
+                <h2 id="currentId">Select a sample</h2>
+                <p id="currentExpected" class="stat-label"></p>
+            </div>
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-label">Result</div>
+                    <div id="resultStatus" class="stat-value">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Best Distance</div>
+                    <div id="bestDist" class="stat-value">-</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="viz-container">
+            <div class="viz-header">
+                <span>Sample Graph (Input)</span>
+                <span id="nodeEdgeCount" style="font-size: 0.8rem; opacity: 0.6;"></span>
+            </div>
+            <div id="cy-main"></div>
+        </div>
+
+        <div class="prototypes-grid" id="protoGrid">
+            <!-- Prototype cards generated by JS -->
+        </div>
+    </main>
+
+    <script>
+        // Dados gerados pelo exportador; o dashboard final recebe o JSON real no lugar deste objeto vazio.
+        const embeddedData = {
+            "prototypes": {},
+            "commands": [],
+            "samples": []
+        };
+        const data = embeddedData;
+
+        const cyStyle = [
+            { selector: 'node', style: { 'label': 'data(label)', 'background-color': '#38bdf8', 'color': '#fff', 'font-size': '10px', 'width': '20px', 'height': '20px', 'text-valign': 'bottom', 'text-margin-y': '5px' } },
+            { selector: 'edge', style: { 'width': 2, 'line-color': '#475569', 'target-arrow-color': '#475569', 'target-arrow-shape': 'triangle', 'curve-style': 'bezier', 'label': 'data(label)', 'font-size': '8px', 'color': '#94a3b8', 'text-rotation': 'autorotate' } }
+        ];
+
+        function init() {
+            renderCommands();
+
+            const list = document.getElementById('sampleList');
+            data.samples.forEach((s, index) => {
+                const best = s.results.reduce((min, r) => r.distance < min.distance ? r : min, s.results[0]);
+                const isCorrect = best.label === s.expected;
+                
+                const li = document.createElement('li');
+                li.className = 'sample-item';
+                li.innerHTML = `
+                    <span>${s.id}</span>
+                    <span class="badge ${isCorrect ? 'success' : 'error'}">${isCorrect ? 'Match' : 'Miss'}</span>
+                `;
+                li.onclick = () => selectSample(index, li);
+                list.appendChild(li);
+                if (index === 0) selectSample(0, li);
+            });
+        }
+
+        function renderCommands() {
+            const list = document.getElementById('commandList');
+            list.innerHTML = '';
+
+            data.commands.forEach((command) => {
+                const item = document.createElement('li');
+                item.className = 'command-item';
+                item.innerHTML = `
+                    <strong>${command.title}</strong>
+                    <p>${command.description}</p>
+                    <div class="command-code">${command.command}</div>
+                    <div class="command-actions">
+                        <button class="command-button copy" type="button">Copy</button>
+                        <button class="command-button secondary" type="button">Use later</button>
+                    </div>
+                `;
+
+                const copyButton = item.querySelector('.copy');
+                const status = document.getElementById('commandStatus');
+                copyButton.onclick = async () => {
+                    try {
+                        await navigator.clipboard.writeText(command.command);
+                        status.innerText = `${command.title} copied to clipboard`;
+                    } catch (error) {
+                        status.innerText = 'Clipboard unavailable in this context';
+                    }
+                };
+
+                list.appendChild(item);
+            });
+
+            if (!data.commands.length) {
+                const empty = document.createElement('li');
+                empty.className = 'command-item';
+                empty.innerHTML = '<p>No commands loaded yet. Regenerate the dashboard with the exporter.</p>';
+                list.appendChild(empty);
+            }
+        }
+
+        function selectSample(idx, el) {
+            document.querySelectorAll('.sample-item').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+
+            const sample = data.samples[idx];
+            document.getElementById('currentId').innerText = sample.id;
+            document.getElementById('currentExpected').innerText = `Expected: ${sample.expected.toUpperCase()}`;
+            
+            const best = sample.results.reduce((min, r) => r.distance < min.distance ? r : min, sample.results[0]);
+            const isCorrect = best.label === sample.expected;
+            
+            document.getElementById('resultStatus').innerText = best.label.toUpperCase();
+            document.getElementById('resultStatus').style.color = isCorrect ? 'var(--success)' : 'var(--error)';
+            document.getElementById('bestDist').innerText = best.distance.toFixed(4);
+            document.getElementById('nodeEdgeCount').innerText = `${sample.graph.nodes.length} nodes, ${sample.graph.edges.length} edges`;
+
+            renderMainGraph(sample.graph);
+            renderPrototypes(sample.results);
+        }
+
+        function renderMainGraph(graphData) {
+            cytoscape({
+                container: document.getElementById('cy-main'),
+                elements: [
+                    ...graphData.nodes.map(n => ({ data: { id: n.id, label: n.label } })),
+                    ...graphData.edges.map((e, i) => ({ data: { id: 'e' + i, source: e.source, target: e.target, label: e.label } }))
+                ],
+                style: cyStyle,
+                layout: { name: 'cose', padding: 30 }
+            });
+        }
+
+        function renderPrototypes(results) {
+            const grid = document.getElementById('protoGrid');
+            grid.innerHTML = '';
+            
+            const bestDist = Math.min(...results.map(r => r.distance));
+
+            results.forEach(res => {
+                const proto = data.prototypes[res.label];
+                const card = document.createElement('div');
+                card.className = `proto-card ${res.distance === bestDist ? 'winner' : ''}`;
+                
+                const cyId = `cy-proto-${res.label}`;
+                card.innerHTML = `
+                    <div class="proto-info">
+                        <strong>Prototype ${res.label.toUpperCase()}</strong>
+                        <span class="distance-val">${res.distance.toFixed(4)}</span>
+                    </div>
+                    <div id="${cyId}" class="cy-proto" style="height: 150px;"></div>
+                `;
+                grid.appendChild(card);
+
+                cytoscape({
+                    container: document.getElementById(cyId),
+                    elements: [
+                        ...proto.nodes.map(n => ({ data: { id: n.id, label: n.label } })),
+                        ...proto.edges.map((e, i) => ({ data: { id: 'e' + i, source: e.source, target: e.target, label: e.label } }))
+                    ],
+                    style: cyStyle,
+                    layout: { name: 'circle', padding: 10 },
+                    userZoomingEnabled: false,
+                    userPanningEnabled: false
+                });
+            });
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>

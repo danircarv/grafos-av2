@@ -1,0 +1,516 @@
+{
+  "prototypes": {
+    "b": {
+      "nodes": [
+        { "id": 1, "label": "stem" },
+        { "id": 2, "label": "loop" },
+        { "id": 3, "label": "loop" },
+        { "id": 4, "label": "tail" }
+      ],
+      "edges": [
+        { "source": 1, "target": 2, "label": "stem" },
+        { "source": 2, "target": 3, "label": "curve" },
+        { "source": 2, "target": 4, "label": "branch" },
+        { "source": 3, "target": 4, "label": "tail" }
+      ]
+    },
+    "d": {
+      "nodes": [
+        { "id": 1, "label": "stem" },
+        { "id": 2, "label": "loop" },
+        { "id": 3, "label": "loop" },
+        { "id": 4, "label": "tail" }
+      ],
+      "edges": [
+        { "source": 1, "target": 2, "label": "stem" },
+        { "source": 1, "target": 4, "label": "branch" },
+        { "source": 2, "target": 3, "label": "curve" },
+        { "source": 2, "target": 4, "label": "tail" }
+      ]
+    },
+    "h": {
+      "nodes": [
+        { "id": 1, "label": "stem" },
+        { "id": 2, "label": "junction" },
+        { "id": 3, "label": "arch" },
+        { "id": 4, "label": "leg" }
+      ],
+      "edges": [
+        { "source": 1, "target": 2, "label": "stem" },
+        { "source": 2, "target": 3, "label": "arch" },
+        { "source": 2, "target": 4, "label": "branch" }
+      ]
+    },
+    "k": {
+      "nodes": [
+        { "id": 1, "label": "stem" },
+        { "id": 2, "label": "junction" },
+        { "id": 3, "label": "diagonal_up" },
+        { "id": 4, "label": "diagonal_down" }
+      ],
+      "edges": [
+        { "source": 1, "target": 2, "label": "stem" },
+        { "source": 2, "target": 3, "label": "diagonal_up" },
+        { "source": 2, "target": 4, "label": "diagonal_down" }
+      ]
+    }
+  },
+  "samples": [
+    {
+      "id": "b_0",
+      "expected": "b",
+      "graph": {
+        "nodes": [
+          { "id": 2, "label": "loop" },
+          { "id": 3, "label": "diagonal_up" },
+          { "id": 4, "label": "tail" }
+        ],
+        "edges": [
+          { "source": 2, "target": 3, "label": "curve" },
+          { "source": 2, "target": 4, "label": "branch" },
+          { "source": 3, "target": 4, "label": "tail" }
+        ]
+      },
+      "results": [
+        { "label": "b", "distance": 0.45238095238095233 },
+        { "label": "d", "distance": 0.7380952380952381 },
+        { "label": "h", "distance": 1.0952380952380951 },
+        { "label": "k", "distance": 1.0952380952380951 }
+      ]
+    },
+    {
+      "id": "b_1",
+      "expected": "b",
+      "graph": {
+        "nodes": [
+          { "id": 2, "label": "loop" },
+          { "id": 3, "label": "loop" },
+          { "id": 4, "label": "tail" },
+          { "id": 5, "label": "stem" }
+        ],
+        "edges": [
+          { "source": 2, "target": 4, "label": "branch" },
+          { "source": 2, "target": 5, "label": "curve" },
+          { "source": 3, "target": 4, "label": "tail" },
+          { "source": 3, "target": 5, "label": "stem" }
+        ]
+      },
+      "results": [
+        { "label": "b", "distance": 0.4880952380952381 },
+        { "label": "d", "distance": 0.6309523809523809 },
+        { "label": "h", "distance": 1.2380952380952381 },
+        { "label": "k", "distance": 1.2380952380952381 }
+      ]
+    },
+    {
+      "id": "b_2",
+      "expected": "b",
+      "graph": {
+        "nodes": [
+          { "id": 2, "label": "loop" },
+          { "id": 3, "label": "terminal" },
+          { "id": 4, "label": "tail" }
+        ],
+        "edges": [
+          { "source": 2, "target": 3, "label": "curve" },
+          { "source": 2, "target": 4, "label": "branch" },
+          { "source": 3, "target": 4, "label": "tail" }
+        ]
+      },
+      "results": [
+        { "label": "b", "distance": 0.45238095238095233 },
+        { "label": "d", "distance": 0.7380952380952381 },
+        { "label": "h", "distance": 1.0952380952380951 },
+        { "label": "k", "distance": 1.238095238095238 }
+      ]
+    },
+    {
+      "id": "b_3",
+      "expected": "b",
+      "graph": {
+        "nodes": [
+          { "id": 1, "label": "stem" },
+          { "id": 2, "label": "loop" },
+          { "id": 3, "label": "loop" },
+          { "id": 4, "label": "tail" },
+          { "id": 5, "label": "tail" }
+        ],
+        "edges": [
+          { "source": 1, "target": 5, "label": "diagonal_down" },
+          { "source": 2, "target": 3, "label": "stem" },
+          { "source": 2, "target": 4, "label": "branch" },
+          { "source": 2, "target": 5, "label": "branch" },
+          { "source": 3, "target": 4, "label": "tail" }
+        ]
+      },
+      "results": [
+        { "label": "b", "distance": 0.7142857142857142 },
+        { "label": "d", "distance": 1.0357142857142856 },
+        { "label": "h", "distance": 1.6666666666666665 },
+        { "label": "k", "distance": 1.6666666666666665 }
+      ]
+    },
+    {
+      "id": "b_4",
+      "expected": "b",
+      "graph": {
+        "nodes": [
+          { "id": 1, "label": "stem" },
+          { "id": 2, "label": "loop" },
+          { "id": 3, "label": "loop" },
+          { "id": 4, "label": "tail" },
+          { "id": 5, "label": "hook" }
+        ],
+        "edges": [
+          { "source": 1, "target": 5, "label": "support" },
+          { "source": 2, "target": 3, "label": "curve" },
+          { "source": 2, "target": 4, "label": "branch" },
+          { "source": 2, "target": 5, "label": "diagonal_down" },
+          { "source": 3, "target": 4, "label": "tail" }
+        ]
+      },
+      "results": [
+        { "label": "b", "distance": 0.5714285714285714 },
+        { "label": "d", "distance": 1.0357142857142856 },
+        { "label": "h", "distance": 1.6666666666666665 },
+        { "label": "k", "distance": 1.6666666666666665 }
+      ]
+    },
+    {
+      "id": "d_0",
+      "expected": "d",
+      "graph": {
+        "nodes": [
+          { "id": 1, "label": "tail" },
+          { "id": 2, "label": "hook" },
+          { "id": 4, "label": "tail" }
+        ],
+        "edges": [
+          { "source": 1, "target": 2, "label": "stem" },
+          { "source": 1, "target": 4, "label": "branch" },
+          { "source": 2, "target": 4, "label": "tail" }
+        ]
+      },
+      "results": [
+        { "label": "b", "distance": 1.0595238095238093 },
+        { "label": "d", "distance": 0.5952380952380952 },
+        { "label": "h", "distance": 1.0952380952380951 },
+        { "label": "k", "distance": 1.0952380952380951 }
+      ]
+    },
+    {
+      "id": "d_1",
+      "expected": "d",
+      "graph": {
+        "nodes": [
+          { "id": 1, "label": "stem" },
+          { "id": 2, "label": "loop" },
+          { "id": 4, "label": "tail" }
+        ],
+        "edges": [
+          { "source": 1, "target": 2, "label": "stem" },
+          { "source": 1, "target": 4, "label": "branch" },
+          { "source": 2, "target": 4, "label": "tail" }
+        ]
+      },
+      "results": [
+        { "label": "b", "distance": 0.9166666666666665 },
+        { "label": "d", "distance": 0.30952380952380953 },
+        { "label": "h", "distance": 0.9523809523809523 },
+        { "label": "k", "distance": 0.9523809523809523 }
+      ]
+    },
+    {
+      "id": "d_2",
+      "expected": "d",
+      "graph": {
+        "nodes": [
+          { "id": 1, "label": "stem" },
+          { "id": 2, "label": "loop" },
+          { "id": 4, "label": "tail" }
+        ],
+        "edges": [
+          { "source": 1, "target": 2, "label": "support" },
+          { "source": 1, "target": 4, "label": "branch" },
+          { "source": 2, "target": 4, "label": "tail" }
+        ]
+      },
+      "results": [
+        { "label": "b", "distance": 1.0595238095238095 },
+        { "label": "d", "distance": 0.45238095238095233 },
+        { "label": "h", "distance": 1.0952380952380951 },
+        { "label": "k", "distance": 1.0952380952380951 }
+      ]
+    },
+    {
+      "id": "d_3",
+      "expected": "d",
+      "graph": {
+        "nodes": [
+          { "id": 1, "label": "loop" },
+          { "id": 2, "label": "loop" },
+          { "id": 4, "label": "tail" }
+        ],
+        "edges": [
+          { "source": 1, "target": 2, "label": "stem" },
+          { "source": 1, "target": 4, "label": "branch" },
+          { "source": 2, "target": 4, "label": "branch" }
+        ]
+      },
+      "results": [
+        { "label": "b", "distance": 0.5952380952380952 },
+        { "label": "d", "distance": 0.5952380952380952 },
+        { "label": "h", "distance": 1.0952380952380951 },
+        { "label": "k", "distance": 1.0952380952380951 }
+      ]
+    },
+    {
+      "id": "d_4",
+      "expected": "d",
+      "graph": {
+        "nodes": [
+          { "id": 1, "label": "stem" },
+          { "id": 2, "label": "loop" },
+          { "id": 3, "label": "loop" },
+          { "id": 4, "label": "tail" }
+        ],
+        "edges": [
+          { "source": 1, "target": 2, "label": "stem" },
+          { "source": 1, "target": 4, "label": "branch" },
+          { "source": 2, "target": 3, "label": "curve" },
+          { "source": 2, "target": 4, "label": "tail" }
+        ]
+      },
+      "results": [
+        { "label": "b", "distance": 0.5 },
+        { "label": "d", "distance": 0.0 },
+        { "label": "h", "distance": 0.9285714285714285 },
+        { "label": "k", "distance": 0.9285714285714285 }
+      ]
+    },
+    {
+      "id": "h_0",
+      "expected": "h",
+      "graph": {
+        "nodes": [
+          { "id": 1, "label": "stem" },
+          { "id": 2, "label": "junction" },
+          { "id": 3, "label": "arch" },
+          { "id": 4, "label": "curve" }
+        ],
+        "edges": [
+          { "source": 1, "target": 2, "label": "stem" },
+          { "source": 2, "target": 3, "label": "arch" },
+          { "source": 2, "target": 4, "label": "branch" }
+        ]
+      },
+      "results": [
+        { "label": "b", "distance": 0.7857142857142856 },
+        { "label": "d", "distance": 1.107142857142857 },
+        { "label": "h", "distance": 0.14285714285714285 },
+        { "label": "k", "distance": 0.5714285714285714 }
+      ]
+    },
+    {
+      "id": "h_1",
+      "expected": "h",
+      "graph": {
+        "nodes": [
+          { "id": 1, "label": "stem" },
+          { "id": 2, "label": "junction" },
+          { "id": 4, "label": "leg" },
+          { "id": 5, "label": "diagonal_down" }
+        ],
+        "edges": [
+          { "source": 1, "target": 2, "label": "stem" },
+          { "source": 2, "target": 4, "label": "branch" },
+          { "source": 2, "target": 5, "label": "branch" }
+        ]
+      },
+      "results": [
+        { "label": "b", "distance": 0.7857142857142856 },
+        { "label": "d", "distance": 1.107142857142857 },
+        { "label": "h", "distance": 0.2857142857142857 },
+        { "label": "k", "distance": 0.42857142857142855 }
+      ]
+    },
+    {
+      "id": "h_2",
+      "expected": "h",
+      "graph": {
+        "nodes": [
+          { "id": 2, "label": "junction" },
+          { "id": 3, "label": "arch" },
+          { "id": 4, "label": "leg" }
+        ],
+        "edges": [
+          { "source": 2, "target": 3, "label": "arch" },
+          { "source": 2, "target": 4, "label": "branch" }
+        ]
+      },
+      "results": [
+        { "label": "b", "distance": 1.619047619047619 },
+        { "label": "d", "distance": 1.6547619047619047 },
+        { "label": "h", "distance": 0.5952380952380952 },
+        { "label": "k", "distance": 1.226190476190476 }
+      ]
+    },
+    {
+      "id": "h_3",
+      "expected": "h",
+      "graph": {
+        "nodes": [
+          { "id": 1, "label": "stem" },
+          { "id": 2, "label": "junction" },
+          { "id": 3, "label": "arch" },
+          { "id": 4, "label": "leg" }
+        ],
+        "edges": [
+          { "source": 1, "target": 2, "label": "stem" },
+          { "source": 2, "target": 3, "label": "arch" },
+          { "source": 2, "target": 4, "label": "branch" }
+        ]
+      },
+      "results": [
+        { "label": "b", "distance": 0.7857142857142856 },
+        { "label": "d", "distance": 1.107142857142857 },
+        { "label": "h", "distance": 0.0 },
+        { "label": "k", "distance": 0.5714285714285714 }
+      ]
+    },
+    {
+      "id": "h_4",
+      "expected": "h",
+      "graph": {
+        "nodes": [
+          { "id": 1, "label": "stem" },
+          { "id": 2, "label": "junction" },
+          { "id": 4, "label": "leg" }
+        ],
+        "edges": [
+          { "source": 1, "target": 2, "label": "stem" },
+          { "source": 2, "target": 4, "label": "branch" }
+        ]
+      },
+      "results": [
+        { "label": "b", "distance": 1.476190476190476 },
+        { "label": "d", "distance": 1.5119047619047619 },
+        { "label": "h", "distance": 0.9404761904761905 },
+        { "label": "k", "distance": 0.5952380952380952 }
+      ]
+    },
+    {
+      "id": "k_0",
+      "expected": "k",
+      "graph": {
+        "nodes": [
+          { "id": 1, "label": "stem" },
+          { "id": 2, "label": "terminal" },
+          { "id": 3, "label": "diagonal_up" },
+          { "id": 4, "label": "diagonal_down" }
+        ],
+        "edges": [
+          { "source": 1, "target": 2, "label": "stem" },
+          { "source": 2, "target": 3, "label": "diagonal_up" },
+          { "source": 2, "target": 4, "label": "diagonal_down" }
+        ]
+      },
+      "results": [
+        { "label": "b", "distance": 0.9285714285714285 },
+        { "label": "d", "distance": 1.2499999999999998 },
+        { "label": "h", "distance": 0.7142857142857142 },
+        { "label": "k", "distance": 0.14285714285714285 }
+      ]
+    },
+    {
+      "id": "k_1",
+      "expected": "k",
+      "graph": {
+        "nodes": [
+          { "id": 1, "label": "stem" },
+          { "id": 2, "label": "junction" },
+          { "id": 3, "label": "diagonal_up" },
+          { "id": 4, "label": "diagonal_down" }
+        ],
+        "edges": [
+          { "source": 1, "target": 2, "label": "diagonal_up" },
+          { "source": 2, "target": 3, "label": "diagonal_up" },
+          { "source": 2, "target": 4, "label": "diagonal_down" }
+        ]
+      },
+      "results": [
+        { "label": "b", "distance": 1.0714285714285714 },
+        { "label": "d", "distance": 1.3928571428571426 },
+        { "label": "h", "distance": 0.7142857142857142 },
+        { "label": "k", "distance": 0.14285714285714285 }
+      ]
+    },
+    {
+      "id": "k_2",
+      "expected": "k",
+      "graph": {
+        "nodes": [
+          { "id": 1, "label": "stem" },
+          { "id": 2, "label": "junction" },
+          { "id": 3, "label": "diagonal_up" }
+        ],
+        "edges": [
+          { "source": 1, "target": 2, "label": "diagonal_down" },
+          { "source": 2, "target": 3, "label": "diagonal_up" }
+        ]
+      },
+      "results": [
+        { "label": "b", "distance": 1.476190476190476 },
+        { "label": "d", "distance": 1.5119047619047619 },
+        { "label": "h", "distance": 0.738095238095238 },
+        { "label": "k", "distance": 0.45238095238095233 }
+      ]
+    },
+    {
+      "id": "k_3",
+      "expected": "k",
+      "graph": {
+        "nodes": [
+          { "id": 1, "label": "stem" },
+          { "id": 2, "label": "junction" },
+          { "id": 3, "label": "diagonal_up" },
+          { "id": 4, "label": "diagonal_down" },
+          { "id": 5, "label": "stem" }
+        ],
+        "edges": [
+          { "source": 1, "target": 2, "label": "stem" },
+          { "source": 2, "target": 4, "label": "diagonal_down" },
+          { "source": 2, "target": 5, "label": "stem" },
+          { "source": 3, "target": 5, "label": "diagonal_down" }
+        ]
+      },
+      "results": [
+        { "label": "b", "distance": 1.1785714285714284 },
+        { "label": "d", "distance": 1.1785714285714284 },
+        { "label": "h", "distance": 1.0 },
+        { "label": "k", "distance": 0.5714285714285714 }
+      ]
+    },
+    {
+      "id": "k_4",
+      "expected": "k",
+      "graph": {
+        "nodes": [
+          { "id": 1, "label": "stem" },
+          { "id": 2, "label": "junction" },
+          { "id": 4, "label": "diagonal_down" }
+        ],
+        "edges": [
+          { "source": 1, "target": 2, "label": "stem" },
+          { "source": 2, "target": 4, "label": "diagonal_down" }
+        ]
+      },
+      "results": [
+        { "label": "b", "distance": 1.476190476190476 },
+        { "label": "d", "distance": 1.5119047619047619 },
+        { "label": "h", "distance": 0.5952380952380952 },
+        { "label": "k", "distance": 0.9404761904761905 }
+      ]
+    }
+  ]
+}
